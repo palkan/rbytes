@@ -20,9 +20,142 @@ In your Gemfile:
 gem "rbytes"
 ```
 
-## Building templates
+## Writing templates
+
+Ruby Bytes adds partial support to Thor/Rails templates. For that, you can use `#include` and `#render` methods:
+
+```erb
+say "Welcome to a custom Rails template!"
+
+<%= include "setup_gems" %>
+
+file "config/initializers/my-gem.rb", <%= code("initializer.rb") %>
+```
+
+The `#include` helper simply injects the contents of the partial into the resulting file.
+
+The `#code` method allows you to inject dynamic contents depending on the local variables defined. For example, given the following template and a partial:
+
+```erb
+# _anycable.yml.tt
+development:
+  broadcast_adapter: <%= cable_adapter %>
+
+# template.rb
+cable_adapter = ask? "Which AnyCable pub/sub adapter do you want to use?"
+
+file "config/anycable.yml", <%= code("anycable.yml") %>
+```
+
+The compiled template will like like this:
+
+```erb
+cable_adapter = ask? "Which AnyCable pub/sub adapter do you want to use?"
+
+file "config/anycable.yml", ERB.new(
+  *[
+  <<~'CODE'
+    development:
+      broadcast_adapter: <%= cable_adapter %>
+  CODE
+  ], trim_mode: "<>").result(binding)
+```
+
+**NOTE:** By default, we assume that partials are stored next to the template's entrypoint. Partials may have "_" prefix and ".rb"/".tt" suffixes.
+
+### Compiling templates
+
+You can compile a template by using the `RubyBytes::Compiler` class:
+
+```ruby
+RubyBytes::Compiler.new(path_to_template).render #=> compiled string
+```
+
+You can also specify a custom partials directory:
+
+```ruby
+RubyBytes::Compiler.new(path_to_template, root: partials_directory).render
+```
+
+Here is a one-liner:
+
+```sh
+ruby -r rbytes -e "puts RubyBytes::Compiler.new(<path>).render"
+```
 
 ### Testing
+
+We provide a Minitest integration to test your templates.
+
+Here is an example usage:
+
+```ruby
+require "ruby_bytes/test_case"
+
+class TemplateTest < RubyBytes::TestCasee
+  # Specify root path for your template (for partials lookup)
+  root File.join(__dir__, "../template")
+
+  # You can test partials in isolation by declaring a custom template
+  template <<~RUBY
+    say "Hello from some partial"
+    <%= include "some_partial" %>
+  RUBY
+
+  def test_some_partial
+    run_generator do |output|
+      assert_file "application.rb"
+
+      assert_file_contains(
+        "application.rb",
+        <<~CODE
+          module Rails
+            class << self
+              def application
+        CODE
+      )
+
+      refute_file_contains(
+        "application.rb",
+        "Nothing"
+      )
+
+      assert_line_printed output, "Hello from some partial"
+    end
+  end
+end
+```
+
+If you use prompt in your templates, you can prepopulate standard input:
+
+```ruby
+class TemplateTest < RubyBytes::TestCasee
+  # Specify root path for your template (for partials lookup)
+  root File.join(__dir__, "../template")
+
+  # You can test partials in isolation by declaring a custom template
+  template <<~RUBY
+    say "Hello from some partial"
+    if yes?("Do you write tests?")
+      say "Gut"
+    else
+      say "Why not?"
+    end
+  RUBY
+
+  def test_prompt_yes
+    run_generator(input: ["y"]) do |output|
+      assert_line_printed output, "Gut"
+    end
+  end
+
+  def test_prompt_no
+    run_generator(input: ["n"]) do |output|
+      assert_line_printed output, "Why not?"
+    end
+  end
+end
+```
 
 ## Thor integration
 

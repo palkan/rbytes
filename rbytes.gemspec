@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/rbytes/version"
+require_relative "lib/ruby_bytes/version"
 
 Gem::Specification.new do |s|
   s.name = "rbytes"
-  s.version = Rbytes::VERSION
+  s.version = RubyBytes::VERSION
   s.authors = ["Vladimir Dementyev"]
   s.email = ["dementiev.vm@gmail.com"]
   s.homepage = "http://github.com/palkan/rbytes"
@@ -21,9 +21,11 @@ Gem::Specification.new do |s|
 
   s.license = "MIT"
 
-  s.files = Dir.glob("lib/**/*") + Dir.glob("bin/**/*") + %w[README.md LICENSE.txt CHANGELOG.md]
+  s.files = Dir.glob("lib/**/*") + Dir.glob("bin/**/*") + Dir.glob("templates/rbytes/*") + %w[README.md LICENSE.txt CHANGELOG.md]
   s.require_paths = ["lib"]
   s.required_ruby_version = ">= 3.0"
+
+  s.add_dependency "thor"
 
   s.add_development_dependency "bundler", ">= 1.15"
   s.add_development_dependency "minitest", "~> 5.0"

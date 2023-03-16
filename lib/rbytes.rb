@@ -1,3 +1,4 @@
 # frozen_string_literal: true
 
-require "rbytes/version"
+require "ruby_bytes/version"
+require "ruby_bytes/compiler"

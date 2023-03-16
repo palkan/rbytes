@@ -14,6 +14,7 @@ AllCops:
     - 'lib/.rbnext/**/*'
     - 'lib/generators/**/templates/*.rb'
     - '.github/**/*'
+    - templates/**/*
   DisplayCopNames: true
   SuggestExtensions: false
   TargetRubyVersion: 3.0
@@ -23,3 +24,6 @@ Standard/BlockSingleLineBraces:
 
 Style/FrozenStringLiteralComment:
   Enabled: true
+
+Style/GlobalVars:
+  Enabled: false
