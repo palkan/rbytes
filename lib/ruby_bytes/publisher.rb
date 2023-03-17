@@ -2,31 +2,34 @@
 
 module RubyBytes
   class Publisher
-    attr_reader :compiler
+    attr_reader :account_id, :token, :template_id
 
-    def self.call(...) = new(...).call
-
-    def initialize(...)
-      @compiler = Compiler.new(...)
+    def initialize(
+      account_id: ENV.fetch("RAILS_BYTES_ACCOUNT_ID"),
+      token: ENV.fetch("RAILS_BYTES_TOKEN"),
+      template_id: ENV.fetch("RAILS_BYTES_TEMPLATE_ID")
+    )
+      @account_id = account_id
+      @token = token
+      @template_id = template_id
     end
 
-    def call
+    def call(template)
       require "net/http"
       require "json"
 
-      token, account_id, template_id = ENV.fetch("RAILS_BYTES_TOKEN"), ENV.fetch("RAILS_BYTES_ACCOUNT_ID"), ENV.fetch("RAILS_BYTES_TEMPLATE_ID")
+      path = "/api/v1/accounts/#{account_id}/templates/#{template_id}.json"
+      data = JSON.dump(script: template)
 
-      uri = URI("https://railsbytes.com/api/v1/accounts/#{account_id}/templates/#{template_id}.json")
-
-      request = Net::HTTP::Patch.new(uri)
-      request["Authorization"] = "Bearer #{token}"
-      request.content_type = "application/json"
-
-      tmpl = compiler.render
-      request.body = JSON.dump(script: tmpl)
-
-      Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-        http.request(request)
+      Net::HTTP.start("railsbytes.com", 443, use_ssl: true) do |http|
+        http.patch(
+          path,
+          data,
+          {
+            "Content-Type" => "application/json",
+            "Authorization" => "Bearer GGpxArFDSa2x3MT4BQNcyxG6"
+          }
+        )
       end.then do |response|
         raise "Failed to publish template: #{response.code} — #{response.message}" unless response.code == "200"
       end

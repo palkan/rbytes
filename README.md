@@ -67,22 +67,18 @@ file "config/anycable.yml", ERB.new(
 
 ### Compiling templates
 
-You can compile a template by using the `RubyBytes::Compiler` class:
+You can compile a template by using the `rbytes` executable:
 
-```ruby
-RubyBytes::Compiler.new(path_to_template).render #=> compiled string
+```sh
+$ rbytes compile path/to/template
+
+<compiled template>
 ```
 
 You can also specify a custom partials directory:
 
-```ruby
-RubyBytes::Compiler.new(path_to_template, root: partials_directory).render
-```
-
-Here is a one-liner:
-
 ```sh
-ruby -r rbytes -e "puts RubyBytes::Compiler.new(<path>).render"
+rbytes compile path/to/template --root=path/to/partials
 ```
 
 ### Testing
@@ -205,6 +201,14 @@ jobs:
       RAILS_BYTES_ACCOUNT_ID: "${{ secrets.RAILS_BYTES_ACCOUNT_ID }}"
       RAILS_BYTES_TOKEN: "${{ secrets.RAILS_BYTES_TOKEN }}"
       RAILS_BYTES_TEMPLATE_ID: "${{ secrets.RAILS_TEMPLATE_ID }}"
+```
+
+## Publishing manually
+
+You can use the `rbytes publish` command to compile and publish a template to RailsBytes:
+
+```sh
+RAILS_BYTES_ACCOUNT_ID=aaa RAILS_BYTES_TOKEN=bbbRAILS_BYTES_TEMPLATE_ID=ccc rbytes publish path/to/template
 ```
 
 ## Contributing

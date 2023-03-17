@@ -37,11 +37,9 @@ jobs:
     - name: Compile and publish
       if: ${{ !inputs.self-publish }}
       run: |
-        echo "Publishing template to RailsBytes..."
-        ruby -r rbytes -e "puts RubyBytes::Publisher.call('${{ inputs.template }}').message"
+        rbytes publish ${{ inputs.template }}
     - name: Compile and publish (from source)
       if: ${{ inputs.self-publish }}
       run: |
         bundle install
-        echo "Publishing template to RailsBytes..."
-        ruby -Ilib -r rbytes -e "puts RubyBytes::Publisher.call('${{ inputs.template }}').message"
+        bundle exec bin/rbytes publish ${{ inputs.template }}
