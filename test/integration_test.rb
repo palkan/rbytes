@@ -47,6 +47,7 @@ class PartialLookupTest < RubyBytes::TestCase
   RUBY
 
   def setup
+    FileUtils.mkdir_p(File.join(TMP_DIR, "custom"))
     File.write(
       File.join(TMP_DIR, "_say_ruby.tt"),
       <<~RUBY
@@ -60,7 +61,7 @@ class PartialLookupTest < RubyBytes::TestCase
   def test_include_partials
     run_generator do |output|
       assert_line_printed output, "Ruby version is: #{RUBY_VERSION}"
-      assert_file "test.rb"
+      assert File.file?(File.join(TMP_DIR, "custom", "test.rb"))
       refute_file_contains "test.rb", "RUBY_VERSION"
     end
   end
@@ -89,6 +90,23 @@ class PromptTest < RubyBytes::TestCase
       assert_line_printed(
         output,
         "Ciao"
+      )
+    end
+  end
+end
+
+class DummyRailsTest < RubyBytes::TestCase
+  template <<~RUBY
+    puts "APP=\#{Rails.application.class.name.partition("::").first.parameterize}"
+  RUBY
+
+  dummy_app File.join(__dir__, "dummy")
+
+  def test_dummy_rails
+    run_generator do |output|
+      assert_line_printed(
+        output,
+        "APP=robo-bytes"
       )
     end
   end

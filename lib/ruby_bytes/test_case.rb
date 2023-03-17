@@ -30,19 +30,76 @@ module RubyBytes
     class << self
       attr_reader :template_contents
 
-      def destination_root(val = nil) = val ? @destination_root = File.expand_path(val) : (@destination_root || TMP_DIR)
+      def destination_root(val = nil)
+        if val
+          @destination_root = val
+        end
 
-      def root(val = nil) = val ? @root = File.expand_path(val) : @root
+        return @destination_root if instance_variable_defined?(:@destination_root)
+
+        @destination_root =
+          if superclass.respond_to?(:destination_root)
+            superclass.destination_root
+          else
+            TMP_DIR
+          end
+      end
+
+      def root(val = nil)
+        if val
+          @root = val
+        end
+
+        return @root if instance_variable_defined?(:@root)
+
+        @root =
+          if superclass.respond_to?(:root)
+            superclass.root
+          end
+      end
+
+      # Set the path to dummy app.
+      # Dummy app is copied to the temporary directory for every run
+      # and set as a destination root.
+      def dummy_app(val = nil)
+        if val
+          @dummy_app = val
+        end
+
+        return @dummy_app if instance_variable_defined?(:@dummy_app)
+
+        @dummy_app =
+          if superclass.respond_to?(:dummy_app)
+            superclass.dummy_app
+          end
+      end
 
       def template(contents)
         @template_contents = contents
       end
     end
 
-    def setup
-    end
+    attr_accessor :destination
 
-    def teardown
+    def prepare_dummy
+      # Then, copy the dummy app if any
+      dummy = self.class.dummy_app
+      return unless dummy
+
+      return if @dummy_prepared
+
+      raise ArgumentError, "Dummy app must be a directory" unless File.directory?(dummy)
+
+      tmp_dummy_path = File.join(TMP_DIR, "dummy")
+      FileUtils.rm_rf(tmp_dummy_path) if File.directory?(tmp_dummy_path)
+      FileUtils.cp_r(dummy, tmp_dummy_path)
+      self.destination = tmp_dummy_path
+
+      if block_given?
+        Dir.chdir(tmp_dummy_path) { yield }
+      end
+
+      @dummy_prepared = true
     end
 
     def run_generator(input: [])
@@ -57,6 +114,10 @@ module RubyBytes
 
       rendered = Compiler.new(path, root: self.class.root).render(self.class.template_contents)
       File.write(path, rendered)
+
+      self.destination = self.class.destination_root
+
+      prepare_dummy
 
       original_stdout = $stdout
       original_stdin = $stdin
@@ -75,14 +136,17 @@ module RubyBytes
       $stdout.sync = true
 
       begin
-        Rbytes::Base.new(
-          [TMP_DIR], {}, {destination_root: self.class.destination_root}
-        ).apply("current_template.rb")
-        yield $stdout.string
+        Dir.chdir(destination) do
+          Rbytes::Base.new(
+            [destination], {}, {destination_root: destination}
+          ).apply("current_template.rb")
+        end
+        yield $stdout.string if block_given?
       ensure
         $stdout = original_stdout
         $stdin = original_stdin
         $rbytes_testing = false
+        @dummy_prepared = false
       end
     end
 
@@ -93,7 +157,7 @@ module RubyBytes
     end
 
     def assert_file_contains(path, body)
-      fullpath = File.join(self.class.destination_root, path)
+      fullpath = File.join(destination, path)
       assert File.file?(fullpath), "File not found: #{path}"
 
       actual = File.read(fullpath)
@@ -101,12 +165,12 @@ module RubyBytes
     end
 
     def assert_file(path)
-      fullpath = File.join(self.class.destination_root, path)
+      fullpath = File.join(destination, path)
       assert File.file?(fullpath), "File not found: #{path}"
     end
 
     def refute_file_contains(path, body)
-      fullpath = File.join(self.class.destination_root, path)
+      fullpath = File.join(destination, path)
       assert File.file?(fullpath), "File not found: #{path}"
 
       actual = File.read(fullpath)
