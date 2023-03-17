@@ -7,9 +7,11 @@ Ruby Bytes is a tool to build application templates for Ruby and Rails applicati
 - Build complex templates consisting of multiple independent components.
 - Test templates with ease.
 
-We also provide a GitHub action to deploy _compiled_ templates to [RailsBytes][].
+We also provide a [GitHub action](#github-action) to deploy _compiled_ templates to [RailsBytes][].
 
-Templates built with Ruby Bytes can be used with the `rails app:template` command or with a custom [Thor command](#thor-integration) (if you want to use a template in a Rails-less environment)
+Templates built with Ruby Bytes can be used with the `rails app:template` command or with a custom [Thor command](#thor-integration) (if you want to use a template in a Rails-less environment).
+
+See examples in the [templates](https://github.com/palkan/rbytes/tree/master/templates) folder. Other noticeable examples are [ruby-on-whales][] and [view_component-contrib][].
 
 ## Installation
 
@@ -179,6 +181,32 @@ Run template from: https://railsbytes.com/script/x7msKX
 hello world from https://railsbytes.com 👋
 ```
 
+## GitHub action
+
+You can use our GitHub action to deploy your templates to RailsBytes.
+
+Here is an example:
+
+```yml
+name: Publish
+
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  publish:
+    uses: palkan/rbytes/.github/workflows/railsbytes.yml@master
+    with:
+      template: templates/my-template.rb
+    secrets:
+      RAILS_BYTES_ACCOUNT_ID: "${{ secrets.RAILS_BYTES_ACCOUNT_ID }}"
+      RAILS_BYTES_TOKEN: "${{ secrets.RAILS_BYTES_TOKEN }}"
+      RAILS_BYTES_TEMPLATE_ID: "${{ secrets.RAILS_TEMPLATE_ID }}"
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at [https://github.com/palkan/rbytes](https://github.com/palkan/rbytes).
@@ -192,3 +220,5 @@ This gem is generated via [new-gem-generator](https://github.com/palkan/new-gem-
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
 [RailsBytes]: https://railsbytes.com
+[ruby-on-whales]: https://github.com/evilmartians/ruby-on-whales
+[view_component-contrib]: https://github.com/palkan/view_component-contrib

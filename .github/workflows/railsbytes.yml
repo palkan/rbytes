@@ -1,0 +1,47 @@
+name: Publish to RailsBytes
+
+on:
+  workflow_call:
+    inputs:
+      template:
+        required: true
+        type: string
+      self-publish:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      RAILS_BYTES_ACCOUNT_ID:
+        required: true
+      RAILS_BYTES_TEMPLATE_ID:
+        required: true
+      RAILS_BYTES_TOKEN:
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_BYTES_ACCOUNT_ID: ${{ secrets.RAILS_BYTES_ACCOUNT_ID }}
+      RAILS_BYTES_TOKEN: ${{ secrets.RAILS_BYTES_TOKEN }}
+      RAILS_BYTES_TEMPLATE_ID: ${{ secrets.RAILS_BYTES_TEMPLATE_ID }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.1
+    - name: Install rbytes
+      if: ${{ !inputs.self-publish }}
+      run: |
+        gem install rbytes
+    - name: Compile and publish
+      if: ${{ !inputs.self-publish }}
+      run: |
+        echo "Publishing template to RailsBytes..."
+        ruby -r rbytes -e "puts RubyBytes::Publisher.call('${{ inputs.template }}').message"
+    - name: Compile and publish (from source)
+      if: ${{ inputs.self-publish }}
+      run: |
+        bundle install
+        echo "Publishing template to RailsBytes..."
+        ruby -Ilib -r rbytes -e "puts RubyBytes::Publisher.call('${{ inputs.template }}').message"
