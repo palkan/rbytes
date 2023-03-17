@@ -22,4 +22,18 @@ Rake::TestTask.new(:test) do |t|
   t.warning = false
 end
 
-task default: %w[rubocop rubocop:md test]
+task :compile do
+  File.delete("lib/ruby_bytes/thor.rb") if File.file?("lib/ruby_bytes/thor.rb")
+
+  sh "bin/rbytes compile templates/rbytes/rbytes.rb > lib/ruby_bytes/thor.rb"
+end
+
+task "test:install" do
+  output = `bin/rbytes install https://railsbytes.com/script/x7msKX`
+  unless output.include?("hello world from https://railsbytes.com")
+    $stdput.puts "Failed to install:\n#{output}"
+    exit(1)
+  end
+end
+
+task default: %w[rubocop rubocop:md compile test]

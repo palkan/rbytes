@@ -5,6 +5,8 @@ require "fileutils"
 require "stringio"
 require "thor"
 
+require "ruby_bytes/thor"
+
 module RubyBytes
   class TestCase < Minitest::Test
     TMP_DIR = File.join(Dir.pwd, "tmp", "rbytes_test")
@@ -12,13 +14,7 @@ module RubyBytes
     FileUtils.rm_rf(TMP_DIR) if File.directory?(TMP_DIR)
     FileUtils.mkdir_p(TMP_DIR)
 
-    # Precompile Thor command
-    Compiler.new(File.join(__dir__, "../../templates/rbytes/rbytes.rb")).render.then do
-      File.write(File.join(TMP_DIR, "rbytes.rb"), _1)
-      require File.join(TMP_DIR, "rbytes.rb")
-
-      Rbytes::Base.source_root(TMP_DIR)
-    end
+    Rbytes::Base.source_paths << TMP_DIR
 
     # Patch Thor::LineEditor to use Basic in tests
     $rbytes_testing = false

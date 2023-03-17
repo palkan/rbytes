@@ -15,6 +15,7 @@ AllCops:
     - 'lib/generators/**/templates/*.rb'
     - '.github/**/*'
     - templates/**/*
+    - 'lib/ruby_bytes/thor.rb'
   DisplayCopNames: true
   SuggestExtensions: false
   TargetRubyVersion: 3.0

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rbytes < Thor
   desc "template", "Load and run generator from RailsBytes"
   def template(url)

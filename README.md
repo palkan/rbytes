@@ -6,11 +6,10 @@ Ruby Bytes is a tool to build application templates for Ruby and Rails applicati
 
 - Build complex templates consisting of multiple independent components.
 - Test templates with ease.
+- Install application templates without Rails.
 - Publish templates to [RailsBytes][].
 
 We also provide a [GitHub action](#github-action) to compile and deploy templates continuously.
-
-Templates built with Ruby Bytes can be used with the `rails app:template` command or with a custom [Thor command](#thor-integration) (if you want to use a template in a Rails-less environment).
 
 ## Examples
 
@@ -21,12 +20,36 @@ See also examples in the [templates](https://github.com/palkan/rbytes/tree/maste
 
 ## Installation
 
-In your Gemfile:
+To install templates, install the `rbytes` executable via the gem:
+
+```sh
+gem install rbytes
+```
+
+For templates development, add `rbytes` to your Gemfile or gemspec:
 
 ```ruby
 # Gemfile
 gem "rbytes"
 ```
+
+## Installing templates
+
+You can use `rbytes install <url>` similarly to `rails app:template` but without needing to install Rails. It's useful if you want to use a template in a Rails-less environment.
+
+Usage example:
+
+```sh
+$ rbytes install https://railsbytes.com/script/x7msKX
+
+Run template from: https://railsbytes.com/script/x7msKX
+  apply  https://railsbytes.com/script/x7msKX
+hello world from https://railsbytes.com 👋
+```
+
+**IMPORTANT**: Not all templates from RailsBytes may be supported as of yet. Please, let us know if you find incompatibilities with `rails app:template`, so we can fix them.
+
+You can also install Ruby Bytes as a plugin for Thor (see [Thor integration](#thor-integration)).
 
 ## Writing templates
 

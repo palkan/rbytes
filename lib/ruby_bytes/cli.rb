@@ -8,6 +8,7 @@ module RubyBytes
     COMMANDS = %w[
       compile
       publish
+      install
     ].freeze
 
     def run(command, *args)
@@ -84,6 +85,32 @@ module RubyBytes
       Publisher.new.call(contents)
 
       $stdout.puts "Published successfully ✅"
+    end
+
+    def install(*args)
+      url, args = *args
+
+      OptionParser.new do |o|
+        o.on "-v", "--version", "Print version and exit" do |_arg|
+          $stdout.puts "Ruby Bytes: v#{RubyBytes::VERSION}"
+          exit(0)
+        end
+
+        o.on_tail "-h", "--help", "Show help" do
+          $stdout.puts <<~USAGE
+            rbytes install URL
+          USAGE
+
+          exit(0)
+        end
+      end.parse!(args || [])
+
+      raise ArgumentError, "Template URL or location must be provided" unless url
+
+      require "thor"
+      require "ruby_bytes/thor"
+
+      Rbytes.new.template(url)
     end
   end
 end
