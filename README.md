@@ -6,12 +6,18 @@ Ruby Bytes is a tool to build application templates for Ruby and Rails applicati
 
 - Build complex templates consisting of multiple independent components.
 - Test templates with ease.
+- Publish templates to [RailsBytes][].
 
-We also provide a [GitHub action](#github-action) to deploy _compiled_ templates to [RailsBytes][].
+We also provide a [GitHub action](#github-action) to compile and deploy templates continuously.
 
 Templates built with Ruby Bytes can be used with the `rails app:template` command or with a custom [Thor command](#thor-integration) (if you want to use a template in a Rails-less environment).
 
-See examples in the [templates](https://github.com/palkan/rbytes/tree/master/templates) folder. Other noticeable examples are [ruby-on-whales][] and [view_component-contrib][].
+## Examples
+
+- [ruby-on-whales][]
+- [view_component-contrib][]
+
+See also examples in the [templates](https://github.com/palkan/rbytes/tree/master/templates) folder.
 
 ## Installation
 
@@ -208,7 +214,10 @@ jobs:
 You can use the `rbytes publish` command to compile and publish a template to RailsBytes:
 
 ```sh
-RAILS_BYTES_ACCOUNT_ID=aaa RAILS_BYTES_TOKEN=bbbRAILS_BYTES_TEMPLATE_ID=ccc rbytes publish path/to/template
+RAILS_BYTES_ACCOUNT_ID=aaa \
+RAILS_BYTES_TOKEN=bbb \
+RAILS_BYTES_TEMPLATE_ID=ccc \
+rbytes publish path/to/template
 ```
 
 ## Contributing
