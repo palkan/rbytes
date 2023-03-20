@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.1.2 (2023-03-20)
+
+- Add missing `rbytes` executable to the gemspec.
+
 ## 0.1.1 (2023-03-20)
 
 - Add Ruby Bytes project generator (see `templates/generator`).

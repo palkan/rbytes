@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob("lib/**/*") + Dir.glob("bin/**/*") + Dir.glob("templates/rbytes/*") + %w[README.md LICENSE.txt CHANGELOG.md]
   s.require_paths = ["lib"]
+  s.executables = %w[rbytes]
   s.required_ruby_version = ">= 3.0"
 
   s.add_dependency "thor"
