@@ -110,6 +110,7 @@ module RubyBytes
       require "thor"
       require "ruby_bytes/thor"
 
+      Rbytes::Base.source_paths << Dir.pwd
       Rbytes.new.template(url)
     end
   end

@@ -22,14 +22,14 @@ module RubyBytes
       contents = File.read(resolve_path(path))
       %(ERB.new(
     *[
-  <<~'CODE'
-  #{contents}
-  CODE
+  <<~'TCODE'
+#{contents}
+  TCODE
   ], trim_mode: "<>").result(binding))
     end
 
     def include(path, indent: 0)
-      indented(File.read(resolve_path(path)), indent)
+      indented(render(File.read(resolve_path(path))), indent)
     end
 
     private

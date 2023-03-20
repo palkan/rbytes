@@ -1,5 +1,5 @@
 require:
-  - standard/cop/block_single_line_braces
+  - standard
 
 inherit_gem:
   standard: config/base.yml

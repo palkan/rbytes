@@ -11,9 +11,6 @@ module RubyBytes
   class TestCase < Minitest::Test
     TMP_DIR = File.join(Dir.pwd, "tmp", "rbytes_test")
 
-    FileUtils.rm_rf(TMP_DIR) if File.directory?(TMP_DIR)
-    FileUtils.mkdir_p(TMP_DIR)
-
     Rbytes::Base.source_paths << TMP_DIR
 
     # Patch Thor::LineEditor to use Basic in tests
@@ -80,6 +77,11 @@ module RubyBytes
     end
 
     attr_accessor :destination
+
+    def setup
+      FileUtils.rm_rf(TMP_DIR) if File.directory?(TMP_DIR)
+      FileUtils.mkdir_p(TMP_DIR)
+    end
 
     def prepare_dummy
       # Then, copy the dummy app if any
@@ -167,6 +169,11 @@ module RubyBytes
     def assert_file(path)
       fullpath = File.join(destination, path)
       assert File.file?(fullpath), "File not found: #{path}"
+    end
+
+    def refute_file(path)
+      fullpath = File.join(destination, path)
+      refute File.file?(fullpath), "File must not exist: #{path}"
     end
 
     def refute_file_contains(path, body)

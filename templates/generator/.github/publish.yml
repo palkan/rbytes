@@ -1,0 +1,17 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  publish:
+    uses: palkan/rbytes/.github/workflows/railsbytes.yml@master
+    with:
+      template: template/<%= name %>.rb
+    secrets:
+      RAILS_BYTES_ACCOUNT_ID: "${{ secrets.RAILS_BYTES_ACCOUNT_ID }}"
+      RAILS_BYTES_TOKEN: "${{ secrets.RAILS_BYTES_TOKEN }}"
+      RAILS_BYTES_TEMPLATE_ID: "${{ secrets.RAILS_BYTES_TEMPLATE_ID }}"

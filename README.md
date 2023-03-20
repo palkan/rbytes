@@ -53,6 +53,8 @@ You can also install Ruby Bytes as a plugin for Thor (see [Thor integration](#th
 
 ## Writing templates
 
+> The quickes way to get started with using Ruby Bytes to build templates is to use [our generator](templates/generator/).
+
 Ruby Bytes adds partial support to Thor/Rails templates. For that, you can use `#include` and `#render` methods:
 
 ```erb

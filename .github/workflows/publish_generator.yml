@@ -1,0 +1,18 @@
+name: Publish Generator template
+
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  publish:
+    uses: palkan/rbytes/.github/workflows/railsbytes.yml@master
+    with:
+      template: templates/generator/generator.rb
+      self-publish: true
+    secrets:
+      RAILS_BYTES_ACCOUNT_ID: "${{ secrets.RAILS_BYTES_ACCOUNT_ID }}"
+      RAILS_BYTES_TOKEN: "${{ secrets.RAILS_BYTES_TOKEN }}"
+      RAILS_BYTES_TEMPLATE_ID: V2GsbB
