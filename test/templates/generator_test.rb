@@ -36,7 +36,7 @@ class GeneratorTest < RubyBytes::TestCase
   end
 
   class ScaffoldTest < GeneratorTest
-    template <<~'CODE'
+    template <<~CODE
       name = "rbytes-template"
       human_name = "Ruby Bytes"
       needs_rails = true
@@ -57,7 +57,7 @@ class GeneratorTest < RubyBytes::TestCase
   end
 
   class TestingWithotRailsTest < GeneratorTest
-    template <<~'CODE'
+    template <<~CODE
       name = "rbytes-template"
       needs_rails = false
       <%= include "testing" %>
@@ -74,7 +74,7 @@ class GeneratorTest < RubyBytes::TestCase
   end
 
   class TestingWithRailsTest < GeneratorTest
-    template <<~'CODE'
+    template <<~CODE
       name = "rbytes-template"
       needs_rails = true
       <%= include "testing" %>
@@ -94,7 +94,7 @@ class GeneratorTest < RubyBytes::TestCase
   end
 
   class CITest < GeneratorTest
-    template <<~'CODE'
+    template <<~CODE
       name = "rbytes-template"
       <%= include "ci" %>
     CODE
