@@ -53,7 +53,15 @@ You can also install Ruby Bytes as a plugin for Thor (see [Thor integration](#th
 
 ## Writing templates
 
-> The quickes way to get started with using Ruby Bytes to build templates is to use [our generator](templates/generator/).
+The quickest way to get started with using Ruby Bytes to build templates is to use our generator to create a project:
+
+```sh
+$ rbytes install https://railsbytes.com/script/V2GsbB
+
+...
+```
+
+### Splitting template into partials
 
 Ruby Bytes adds partial support to Thor/Rails templates. For that, you can use `#include` and `#render` methods:
 
@@ -80,7 +88,7 @@ cable_adapter = ask? "Which AnyCable pub/sub adapter do you want to use?"
 file "config/anycable.yml", <%= code("anycable.yml") %>
 ```
 
-The compiled template will like like this:
+The compiled template will look like this:
 
 ```erb
 cable_adapter = ask? "Which AnyCable pub/sub adapter do you want to use?"
@@ -94,7 +102,7 @@ file "config/anycable.yml", ERB.new(
   ], trim_mode: "<>").result(binding)
 ```
 
-**NOTE:** By default, we assume that partials are stored next to the template's entrypoint. Partials may have "_" prefix and ".rb"/".tt" suffixes.
+**NOTE:** By default, we assume that partials are stored next to the template's entry-point. Partials may have the "_" prefix and ".rb" or ".tt" suffixes.
 
 ### Compiling templates
 
@@ -251,7 +259,7 @@ Bug reports and pull requests are welcome on GitHub at [https://github.com/palka
 
 ## Credits
 
-This gem is generated via [new-gem-generator](https://github.com/palkan/new-gem-generator).
+This gem is generated via [`newgem` template](https://github.com/palkan/newgem) by [@palkan](https://github.com/palkan).
 
 ## License
 
