@@ -88,14 +88,15 @@ module RubyBytes
       dummy = self.class.dummy_app
       return unless dummy
 
-      return if @dummy_prepared
-
       raise ArgumentError, "Dummy app must be a directory" unless File.directory?(dummy)
 
       tmp_dummy_path = File.join(TMP_DIR, "dummy")
+      self.destination = tmp_dummy_path
+
+      return if @dummy_prepared
+
       FileUtils.rm_rf(tmp_dummy_path) if File.directory?(tmp_dummy_path)
       FileUtils.cp_r(dummy, tmp_dummy_path)
-      self.destination = tmp_dummy_path
 
       if block_given?
         Dir.chdir(tmp_dummy_path) { yield }
