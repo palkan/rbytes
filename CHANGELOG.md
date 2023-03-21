@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.1.3 (2023-03-20)
+
+- Fix preparing dummy to alwasy set destination.
+
 ## 0.1.2 (2023-03-20)
 
 - Add missing `rbytes` executable to the gemspec.
