@@ -11,10 +11,13 @@ Ruby Bytes is a tool to build application templates for Ruby and Rails applicati
 
 We also provide a [GitHub action](#github-action) to compile and deploy templates continuously.
 
+> 📖 Read more about Ruby Bytes and application templates in the [Ruby Bytes, or generating standalone generators](https://evilmartians.com/chronicles/ruby-bytes-or-generating-standalone-generators) post.
+
 ## Examples
 
 - [ruby-on-whales][]
 - [view_component-contrib][]
+- [rubocoping][]
 
 See also examples in the [templates](https://github.com/palkan/rbytes/tree/master/templates) folder.
 
@@ -268,3 +271,4 @@ The gem is available as open source under the terms of the [MIT License](http://
 [RailsBytes]: https://railsbytes.com
 [ruby-on-whales]: https://github.com/evilmartians/ruby-on-whales
 [view_component-contrib]: https://github.com/palkan/view_component-contrib
+[rubocoping]: https://github.com/evilmartians/rubocoping-generator
