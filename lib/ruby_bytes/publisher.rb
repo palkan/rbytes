@@ -27,7 +27,7 @@ module RubyBytes
           data,
           {
             "Content-Type" => "application/json",
-            "Authorization" => "Bearer GGpxArFDSa2x3MT4BQNcyxG6"
+            "Authorization" => "Bearer #{token}"
           }
         )
       end.then do |response|
