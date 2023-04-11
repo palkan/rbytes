@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.1.4 (2023-04-11)
+
+- Fix publishing to RailsBytes.
+
 ## 0.1.3 (2023-03-20)
 
 - Fix preparing dummy to alwasy set destination.
