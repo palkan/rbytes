@@ -2,6 +2,8 @@
 
 ## master
 
+- Add `import_template` command.
+
 ## 0.1.4 (2023-04-11)
 
 - Fix publishing to RailsBytes.
