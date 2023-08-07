@@ -122,7 +122,7 @@ class DummyRailsTest < RubyBytes::TestCase
     run_generator do |output|
       assert_line_printed(
         output,
-        "APP=robo-bytes"
+        "APP=robobytes"
       )
     end
   end
