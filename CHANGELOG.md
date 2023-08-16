@@ -2,7 +2,9 @@
 
 ## master
 
-- Add `import_template` command.
+## 0.2.0 (2023-04-15)
+
+- Add `#import_template` directive to inline other templates.
 
 ## 0.1.4 (2023-04-11)
 
