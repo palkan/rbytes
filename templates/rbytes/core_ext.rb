@@ -7,7 +7,7 @@ rescue LoadError
   # TODO: Add more extensions
   class ::String
     def parameterize
-      gsub("::", "/").gsub(/([a-z])([A-Z])/, '\1-\2').downcase
+      downcase.gsub(/[^a-z0-9\-_]+/, '-').gsub(/-{2,}/, '-').gsub(/^-|-$/, '')
     end
 
     def underscore
