@@ -107,6 +107,22 @@ file "config/anycable.yml", ERB.new(
 
 **NOTE:** By default, we assume that partials are stored next to the template's entry-point. Partials may have the "_" prefix and ".rb" or ".tt" suffixes.
 
+Ruby Bytes can also import a sub-template into your template. Simply use the `#import_template` helper in your template:
+
+```erb
+# subtemplate/_partial.rb
+say "Hello from subtemplate's partial!"
+
+# subtemplate/subtemplate.rb
+<%= include "partial" %>
+
+# template.rb
+<%= import_template("subtemplate/subtemplate.rb")>
+```
+
+Note that the full filename must be passed to the `#import_template` helper, including any file extension, unlike the `#include` helper. All templates within the subtemplate directory will consider that to be their root directory.
+
+
 ### Compiling templates
 
 You can compile a template by using the `rbytes` executable:

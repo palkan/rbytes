@@ -32,6 +32,10 @@ module RubyBytes
       indented(render(File.read(resolve_path(path))), indent)
     end
 
+    def import_template(path, indent: 0)
+      indented(self.class.new(File.join(root, path)).render, indent)
+    end
+
     private
 
     PATH_CANDIDATES = [

@@ -67,6 +67,22 @@ class PartialLookupTest < RubyBytes::TestCase
   end
 end
 
+class IncludeTemplateTest < RubyBytes::TestCase
+  root File.join(__dir__, "templates/imports_template")
+
+  template <<~RUBY
+    <%= include "importer" %>
+  RUBY
+
+  def test_included_template
+    run_generator do |output|
+      assert_line_printed output, "Hello from the Root"
+      assert_line_printed output, "Hello from A template"
+      assert_line_printed output, "Hello from A partial"
+    end
+  end
+end
+
 class PromptTest < RubyBytes::TestCase
   template <<~RUBY
     if yes?("Mochtest du etwas trinken?")
