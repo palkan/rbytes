@@ -26,10 +26,10 @@ jobs:
       RAILS_BYTES_TOKEN: ${{ secrets.RAILS_BYTES_TOKEN }}
       RAILS_BYTES_TEMPLATE_ID: ${{ secrets.RAILS_BYTES_TEMPLATE_ID }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
+        ruby-version: 3.3
     - name: Install rbytes
       if: ${{ !inputs.self-publish }}
       run: |
