@@ -96,11 +96,7 @@ class Rbytes
     # Print an unformatted error statement to $stderr (legacy Thor method).
     # Thor default: $stderr.puts statement.
     def error(statement)
-      return if quiet?
-
-      draw_box!
-
-      super
+      say_error(statement)
     end
 
     # Print an array of strings in evenly-spaced columns.
@@ -110,7 +106,35 @@ class Rbytes
 
       draw_box!
 
-      super
+      return if array.empty?
+
+      if array.size <= 4
+        stdout.puts Lipgloss::List.new.items(array.map(&:to_s)).render
+        stdout.flush
+        return
+      end
+
+      col_width = array.map { |e| e.to_s.size }.max + 2
+      cols = [terminal_width / col_width, array.size].min.clamp(4..)
+
+      # Shrink columns so the last row has at least cols-2 items
+      while cols > 4
+        remainder = array.size % cols
+        break if remainder.zero? || remainder >= cols - 2
+        cols -= 1
+      end
+
+      even_style = Lipgloss::Style.new.width(col_width).inline(true).align(:center).background("254").foreground("0")
+      odd_style = Lipgloss::Style.new.width(col_width).inline(true).align(:center).background("234")
+
+      rows = array.each_slice(cols).map.with_index do |row, ri|
+        Lipgloss.join_horizontal(:top, *row.map.with_index { |item, ci| ((ri + ci).even? ? even_style : odd_style).render(item.to_s) })
+      end
+
+      buffer = Lipgloss.join_vertical(:left, *rows)
+
+      stdout.puts(buffer)
+      stdout.flush
     end
 
     # Print a 2-D array as an aligned table.
@@ -209,11 +233,9 @@ class Rbytes
     end
 
     # Return the width (in columns) of the current terminal.
-    # Thor default: detects via IO/stty.
-    # Charmed:      use Lipgloss.width (Go-backed precise detection) when
-    #               available, otherwise fall back to Thor's implementation.
+    # Thor default: detects via IO/stty (class method on Thor::Shell::Terminal).
     def terminal_width
-      super
+      Thor::Shell::Terminal.terminal_width
     end
 
     # ── Internal (Rails::Actions) ─────────────────────────────────────────
@@ -243,7 +265,7 @@ class Rbytes
     end
 
     def draw_box!
-      return if box_buffer.empty?
+      return stdout.puts if box_buffer.empty?
 
       # Single line is printed as is
       buffer =

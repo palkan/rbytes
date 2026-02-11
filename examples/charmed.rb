@@ -40,8 +40,12 @@ print_table [
 say ""
 
 # ── print_in_columns ─────────────────────────────────────────────────
-say "Available components:"
+say "Available components:", :blue
 print_in_columns %w[Spinner Progress Timer TextInput TextArea Viewport List Table FilePicker]
+say ""
+
+say "Available log levels:", :blue
+print_in_columns %w[Info Warn Debug Error]
 say ""
 
 # ── print_wrapped ────────────────────────────────────────────────────
