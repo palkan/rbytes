@@ -59,23 +59,21 @@ say ""
 # ── ask ──────────────────────────────────────────────────────────────
 name = ask("What is your name?", default: "Martian")
 say "Hello, #{name}! 🚀"
+say ""
 
 language = ask("Pick a language:", limited_to: %w[Ruby Go TypeScript Rust], default: "Go")
 say "Great choice: #{language}"
+say ""
 
 # ── yes? / no? ───────────────────────────────────────────────────────
 if yes?("Do you like terminal UIs?")
   say "🎉 We knew it!"
+elsif no?("Are you a GUI lover?")
+  say "🎉 We knew it!"
 else
-  if no?("Are you a GUI lover?")
-    say "🎉 We knew it!"
-  else
-    say "Okay, no comments."
-  end
-  say ""
+  say "Okay, no comments."
 end
-
-return
+say ""
 
 # ── file_collision (create_file triggers it when file exists) ────────
 file "charmed_demo.txt", "Hello from the Charmed demo!\n"

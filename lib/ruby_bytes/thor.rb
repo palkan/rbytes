@@ -11,7 +11,7 @@ class Rbytes < Thor
     Base.new.apply(url)
   end
 
-  # Rails core extensions can be used in templates.
+    # Rails core extensions can be used in templates.
   # Let's try to load ActiveSupport first and fallback to our custom set of extensions otherwise.
   begin
     require "active_support"
@@ -35,7 +35,7 @@ class Rbytes < Thor
 
 
   class Base < Thor::Group
-    # Stub `Rails.application` to have a correct application name
+        # Stub `Rails.application` to have a correct application name
     module Rails
       class << self
         def application
@@ -57,7 +57,7 @@ class Rbytes < Thor
       end
     end
 
-    # Copied from https://github.com/rails/rails/blob/38275763257221e381cd4e37958ce1413fd0433c/railties/lib/rails/generators/actions.rb
+        # Copied from https://github.com/rails/rails/blob/38275763257221e381cd4e37958ce1413fd0433c/railties/lib/rails/generators/actions.rb
     module Rails
       module Actions
         # Adds an entry into +Gemfile+ for the supplied gem.
@@ -444,6 +444,7 @@ class Rbytes < Thor
         end
       end
     end
+
 
     include Thor::Actions
     include Rails::Actions

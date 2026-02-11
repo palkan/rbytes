@@ -38,17 +38,7 @@ class Rbytes
 
       return draw_box! if message == ""
 
-      style = Lipgloss::Style.new.inline(true)
-      Array(color).each do |c|
-        case c
-        when :bold then style = style.bold(true)
-        when :on_black, :on_red, :on_green, :on_yellow, :on_blue, :on_magenta, :on_cyan, :on_white
-          style = style.background(BG_COLORS.fetch(c.to_s.sub("on_", "").to_sym))
-        when Symbol then style = style.foreground(FG_COLORS.fetch(c))
-        end
-      end
-
-      buffer = style.render(message.to_s)
+      buffer = set_color(message, *Array(color))
 
       append_to_current_box(buffer)
     end
@@ -229,39 +219,23 @@ class Rbytes
     # Apply color and style to a string.
     # Thor default: wraps string in ANSI escape codes.
     def set_color(string, *colors)
-      draw_box!
+      style = Lipgloss::Style.new.inline(true)
+      colors.each do |c|
+        case c
+        when :bold then style = style.bold(true)
+        when :on_black, :on_red, :on_green, :on_yellow, :on_blue, :on_magenta, :on_cyan, :on_white
+          style = style.background(BG_COLORS.fetch(c.to_s.sub("on_", "").to_sym))
+        when Symbol then style = style.foreground(FG_COLORS.fetch(c))
+        end
+      end
 
-      super
-    end
-
-    # Handle a file-overwrite collision.
-    # Thor default: interactive Y/n/a/q/d/h/m loop via +ask+.
-    def file_collision(destination)
-      draw_box!
-
-      super
+      style.render(string.to_s)
     end
 
     # Return the width (in columns) of the current terminal.
     # Thor default: detects via IO/stty (class method on Thor::Shell::Terminal).
     def terminal_width
       Thor::Shell::Terminal.terminal_width
-    end
-
-    # ── Internal (Rails::Actions) ─────────────────────────────────────────
-
-    # Log a generator action. Called by every Thor::Actions helper
-    # (create_file, inject_into_file, gem, route, …).
-    # Single-arg form calls +say+; two-arg form calls +say_status+.
-    # Thor default: delegates to say / say_status.
-    # Charmed:      piggy-backs on the charmed +say+ / +say_status+
-    #               overrides above.
-    def log(*args)
-      return if quiet?
-
-      draw_box!
-
-      super
     end
 
     private

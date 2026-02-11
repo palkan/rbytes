@@ -6,11 +6,8 @@ gem "debug", platform: :mri
 
 gemspec
 
-gem "bubbletea"
 gem "lipgloss"
-gem "bubbles"
 gem "gum"
-gem "huh", github: "marcoroth/huh-ruby"
 
 eval_gemfile "gemfiles/rubocop.gemfile"
 
