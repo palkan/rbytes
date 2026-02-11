@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "gum"
 require "lipgloss"
 
 class Rbytes
@@ -38,19 +37,17 @@ class Rbytes
 
       return draw_box! if message == ""
 
-      opts = {}
+      style = Lipgloss::Style.new.inline(true)
       Array(color).each do |c|
         case c
-        when :bold then opts[:bold] = true
+        when :bold then style = style.bold(true)
         when :on_black, :on_red, :on_green, :on_yellow, :on_blue, :on_magenta, :on_cyan, :on_white
-          opts[:background] = BG_COLORS.fetch(c.to_s.sub("on_", "").to_sym)
-        when Symbol then opts[:foreground] = FG_COLORS.fetch(c)
+          style = style.background(BG_COLORS.fetch(c.to_s.sub("on_", "").to_sym))
+        when Symbol then style = style.foreground(FG_COLORS.fetch(c))
         end
       end
 
-      buffer = Gum.style(message.to_s, **opts)
-      # TODO: how to handle force_new_line ?
-      # buffer << "\n" if force_new_line && !message.to_s.end_with?("\n")
+      buffer = style.render(message.to_s)
 
       append_to_current_box(buffer)
     end
@@ -72,7 +69,8 @@ class Rbytes
 
       color_code = log_status.is_a?(Symbol) ? FG_COLORS.fetch(log_status) : FG_COLORS.fetch(STATUS_COLORS.fetch(status, STATUS_COLORS[:info]))
 
-      buffer = Gum.format(%({{ Bold (Color "#{color_code}" "#{status.to_s.upcase}") }}\t#{message}), type: :template)
+      status_style = Lipgloss::Style.new.bold(true).foreground(color_code).inline(true)
+      buffer = "#{status_style.render(status.to_s.upcase)}\t#{message}"
 
       stdout.puts(buffer)
       stdout.flush
@@ -86,7 +84,11 @@ class Rbytes
       draw_box!
 
       # Print error in a box
-      buffer = Gum.style(message, border: :hidden, padding: "1 1", align: "center", background: FG_COLORS.fetch(color))
+      error_style = Lipgloss::Style.new
+        .padding(1, 1)
+        .align(:center)
+        .background(FG_COLORS.fetch(color))
+      buffer = error_style.render(message)
       stderr.puts(buffer)
       stderr.flush
     end
@@ -144,7 +146,6 @@ class Rbytes
         end
 
       buffer = table.render
-      # buffer = Gum.table(data, columns: headers, print: true)
 
       stdout.puts(buffer)
       stdout.flush
@@ -221,9 +222,8 @@ class Rbytes
     # (create_file, inject_into_file, gem, route, …).
     # Single-arg form calls +say+; two-arg form calls +say_status+.
     # Thor default: delegates to say / say_status.
-    # Charmed:      optionally use Gum::Log for structured, level-aware
-    #               output; otherwise piggy-backs on the charmed +say+ /
-    #               +say_status+ overrides above.
+    # Charmed:      piggy-backs on the charmed +say+ / +say_status+
+    #               overrides above.
     def log(*args)
       return if quiet?
 
@@ -250,7 +250,11 @@ class Rbytes
         if box_buffer.size == 1
           box_buffer.first
         else
-          Gum.style(box_buffer.join("\n"), border: :normal, padding: "1 2", align: "center")
+          Lipgloss::Style.new
+            .border(:normal)
+            .padding(1, 2)
+            .align(:center)
+            .render(box_buffer.join("\n"))
         end
 
       stdout.puts(buffer)

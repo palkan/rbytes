@@ -17,10 +17,10 @@ say "This line is cyan.", :cyan
 say "This line is bold red.", [:red, :bold]
 
 # ── say_status ────────────────────────────────────────────────────────
-say_status :info,    "Charmed module loaded"
-say_status :create,  "config/charmed.yml",       :green
-say_status :skip,    "already exists",           :yellow
-say_status :error,   "something went wrong",     :red
+say_status :info, "Charmed module loaded"
+say_status :create, "config/charmed.yml", :green
+say_status :skip, "already exists", :yellow
+say_status :error, "something went wrong", :red
 
 # ── say_error / error ────────────────────────────────────────────────
 say_error "This is a warning printed to stderr."
@@ -29,17 +29,15 @@ say ""
 # ── print_table ──────────────────────────────────────────────────────
 say "Here is a table of Charm Ruby gems:"
 print_table [
-  ["Gem",        "Purpose"],
-  ["lipgloss",   "Styling & layout"],
-  ["huh",        "Terminal forms"],
-  ["gum",        "Glamorous shell scripts"],
-  ["glamour",    "Markdown rendering"],
-  ["bubbletea",  "TUI framework"],
-  ["bubbles",    "TUI components"]
+  ["Gem", "Purpose"],
+  ["lipgloss", "Styling & layout"],
+  ["huh", "Terminal forms"],
+  ["gum", "Glamorous shell scripts"],
+  ["glamour", "Markdown rendering"],
+  ["bubbletea", "TUI framework"],
+  ["bubbles", "TUI components"]
 ]
 say ""
-
-return
 
 # ── print_in_columns ─────────────────────────────────────────────────
 say "Available components:"
@@ -53,6 +51,8 @@ print_wrapped "Charmed integrates the Charm Ruby ecosystem into Thor so that eve
               "No more plain-text prompts — get styled output, interactive forms, " \
               "and rich tables without changing your template code."
 say ""
+
+return
 
 # ── ask ──────────────────────────────────────────────────────────────
 name = ask("What is your name?", default: "Martian")
