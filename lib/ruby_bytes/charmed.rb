@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "lipgloss"
+require "gum"
 
 class Rbytes
   module Charmed
@@ -185,7 +186,9 @@ class Rbytes
 
       draw_box!
 
-      super
+      style = Lipgloss::Style.new.background("234")
+      buffer = style.render(message)
+      super(buffer)
     end
 
     # ── Input ─────────────────────────────────────────────────────────────
@@ -195,7 +198,14 @@ class Rbytes
     def ask(statement, *args)
       draw_box!
 
-      super
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      # color = args.first
+
+      if options[:limited_to]
+        Gum.choose(options[:limited_to], header: statement, selected: options[:default])
+      else
+        Gum.input(value: options[:default], prompt: "> ", header: statement)
+      end
     end
 
     # Ask a yes/no question, return true when the user answers "y" or "yes".
@@ -203,7 +213,7 @@ class Rbytes
     def yes?(statement, color = nil)
       draw_box!
 
-      super
+      Gum.confirm(statement, default: false)
     end
 
     # Ask a yes/no question, return true when the user answers "n" or "no".
@@ -211,7 +221,7 @@ class Rbytes
     def no?(statement, color = nil)
       draw_box!
 
-      super
+      !Gum.confirm(statement, default: false)
     end
 
     # ── Formatting / Utility ──────────────────────────────────────────────

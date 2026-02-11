@@ -49,31 +49,33 @@ print_in_columns %w[Info Warn Debug Error]
 say ""
 
 # ── print_wrapped ────────────────────────────────────────────────────
-say "A wrapped paragraph:"
+say "A wrapped paragraph:", :blue
 print_wrapped "Charmed integrates the Charm Ruby ecosystem into Thor so that every " \
               "template you write gets beautiful, accessible terminal UI for free. " \
               "No more plain-text prompts — get styled output, interactive forms, " \
               "and rich tables without changing your template code."
 say ""
 
-return
-
 # ── ask ──────────────────────────────────────────────────────────────
 name = ask("What is your name?", default: "Martian")
 say "Hello, #{name}! 🚀"
-say ""
 
-language = ask("Pick a language:", limited_to: %w[Ruby Go TypeScript Rust])
+language = ask("Pick a language:", limited_to: %w[Ruby Go TypeScript Rust], default: "Go")
 say "Great choice: #{language}"
-say ""
 
 # ── yes? / no? ───────────────────────────────────────────────────────
 if yes?("Do you like terminal UIs?")
   say "🎉 We knew it!"
 else
-  say "Give it a try — you might change your mind."
+  if no?("Are you a GUI lover?")
+    say "🎉 We knew it!"
+  else
+    say "Okay, no comments."
+  end
+  say ""
 end
-say ""
+
+return
 
 # ── file_collision (create_file triggers it when file exists) ────────
 file "charmed_demo.txt", "Hello from the Charmed demo!\n"
