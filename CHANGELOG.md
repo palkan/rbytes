@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.3.0 (2026-02-13)
+
+- Add Charm Ruby integration.
+
 ## 0.2.0 (2023-04-15)
 
 - Add `#import_template` directive to inline other templates.

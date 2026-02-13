@@ -6,9 +6,6 @@ gem "debug", platform: :mri
 
 gemspec
 
-gem "lipgloss"
-gem "gum"
-
 eval_gemfile "gemfiles/rubocop.gemfile"
 
 local_gemfile = "#{File.dirname(__FILE__)}/Gemfile.local"

@@ -54,7 +54,7 @@ class Rbytes
     # Print a status badge followed by a message (e.g. "  create  config/routes.rb").
     # Thor default: right-aligns the status word, colors it, appends the message.
     def say_status(status, message, log_status = true)
-      return if quiet?
+      return if quiet? || log_status == false
 
       draw_box!
 
@@ -195,7 +195,7 @@ class Rbytes
         Gum.choose(options[:limited_to], header: statement, selected: options[:default])
       else
         Gum.input(value: options[:default], prompt: "> ", header: statement)
-      end
+      end.then { |v| handle_gum_result(v) }
     end
 
     # Ask a yes/no question, return true when the user answers "y" or "yes".
@@ -203,7 +203,9 @@ class Rbytes
     def yes?(statement, color = nil)
       draw_box!
 
-      Gum.confirm(statement, default: false)
+      handle_gum_result(
+        Gum.choose(%w[Yes No], header: statement, selected: "Yes")
+      ).then { |res| res == "Yes" }
     end
 
     # Ask a yes/no question, return true when the user answers "n" or "no".
@@ -211,7 +213,9 @@ class Rbytes
     def no?(statement, color = nil)
       draw_box!
 
-      !Gum.confirm(statement, default: false)
+      handle_gum_result(
+        Gum.choose(%w[Yes No], header: statement, selected: "Yes")
+      ).then { |res| res == "No" }
     end
 
     # ── Formatting / Utility ──────────────────────────────────────────────
@@ -267,6 +271,13 @@ class Rbytes
       stdout.flush
 
       box_buffer.clear
+    end
+
+    def handle_gum_result(res)
+      # nil means user cancelled
+      # https://github.com/marcoroth/gum-ruby/blob/faf9e2ccefa6457708a4eb31c992e0ccf585a998/lib/gum/command.rb#L46
+      Kernel.exit(130) if res.nil?
+      res
     end
   end
 end

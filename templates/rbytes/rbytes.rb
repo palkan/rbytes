@@ -8,7 +8,7 @@ class Rbytes < Thor
     # require gems typically used in templates
     require "bundler"
 
-    Base.new.apply(url)
+    Base.new.apply(url, verbose: false)
   end
 
   <%= include "core_ext", indent: 2 %>
