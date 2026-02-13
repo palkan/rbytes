@@ -27,6 +27,8 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 3.0"
 
   s.add_dependency "thor"
+  s.add_dependency "lipgloss"
+  s.add_dependency "gum"
 
   s.add_development_dependency "bundler", ">= 1.15"
   s.add_development_dependency "minitest", "~> 5.0"

@@ -2,6 +2,10 @@
 
 ## master
 
+## 0.3.1 (2026-02-13)
+
+- Add `lipgloss` and `gum` as dependencies.
+
 ## 0.3.0 (2026-02-13)
 
 - Add Charm Ruby integration.
